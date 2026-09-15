@@ -1,6 +1,6 @@
 # Inventario de Laboratorio Informático
 
-**Estudiante:** _(completar)_
+**Estudiante:** _Dahiana Arce_
 **Curso:** 2do Año — Bachillerato Técnico en Informática
 **Materias:** Software y Laboratorio Informático
 **Colegio:** Colegio Nacional E.M.D. Asunción Escalada — 2026
@@ -62,8 +62,8 @@ Tabla `componentes` (ver `schema.sql`):
 
 ## Publicación
 
-- Repositorio: `<pegar enlace de GitHub>`
-- Sistema publicado: `<pegar enlace de GitHub Pages / Render>`
+- Repositorio: `//github.com/dahianaarce28-lang/Gestion-de-Equipos-y-Componentes-InformaticositHub`
+- Sistema publicado: `https://dahianaarce28-lang.github.io/Gestion-de-Equipos-y-Componentes-Informaticos/`
 
 ## Seguridad
 
