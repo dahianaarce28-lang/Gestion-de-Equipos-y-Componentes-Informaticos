@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Inventario — Laboratorio Informático</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="topbar__mark">⌁</span>
+      <div>
+        <h1>Inventario · Laboratorio Informático</h1>
+        <p class="topbar__sub">Colegio Nacional E.M.D. Asunción Escalada — 2do BTI</p>
+      </div>
+    </div>
+    <div class="topbar__status" id="conn-status">
+      <span class="dot dot--pending"></span> conectando con Supabase…
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ================= FORMULARIO ================= -->
+    <section class="panel panel--form" aria-labelledby="form-title">
+      <h2 id="form-title"><span class="panel__index">01</span> Registrar / Editar componente</h2>
+
+      <form id="form-componente" novalidate>
+        <input type="hidden" id="f-id">
+
+        <div class="field">
+          <label for="f-codigo">Código *</label>
+          <input type="text" id="f-codigo" placeholder="ARD001" autocomplete="off">
+          <span class="field__error" id="err-codigo"></span>
+        </div>
+
+        <div class="field">
+          <label for="f-nombre">Nombre *</label>
+          <input type="text" id="f-nombre" placeholder="Arduino Uno" autocomplete="off">
+          <span class="field__error" id="err-nombre"></span>
+        </div>
+
+        <div class="field">
+          <label for="f-categoria">Categoría *</label>
+          <select id="f-categoria">
+            <option value="">Seleccionar…</option>
+            <option>Arduino</option>
+            <option>Sensores</option>
+            <option>Computadoras</option>
+            <option>Monitores</option>
+            <option>Periféricos</option>
+            <option>Componentes electrónicos</option>
+            <option>Herramientas</option>
+            <option>Redes</option>
+            <option>Otros</option>
+          </select>
+          <span class="field__error" id="err-categoria"></span>
+        </div>
+
+        <div class="field">
+          <label for="f-marca">Marca</label>
+          <input type="text" id="f-marca" placeholder="Genérico" autocomplete="off">
+        </div>
+
+        <div class="field field--half">
+          <label for="f-cantidad">Cantidad *</label>
+          <input type="number" id="f-cantidad" min="0" step="1" placeholder="0">
+          <span class="field__error" id="err-cantidad"></span>
+        </div>
+
+        <div class="field field--half">
+          <label for="f-estado">Estado *</label>
+          <select id="f-estado">
+            <option value="">Seleccionar…</option>
+            <option>Disponible</option>
+            <option>En uso</option>
+            <option>Reparación</option>
+            <option>Baja</option>
+          </select>
+          <span class="field__error" id="err-estado"></span>
+        </div>
+
+        <div class="field">
+          <label for="f-descripcion">Descripción</label>
+          <textarea id="f-descripcion" rows="2" placeholder="Información adicional (opcional)"></textarea>
+        </div>
+
+        <div class="form__actions">
+          <button type="submit" class="btn btn--primary" id="btn-submit">Guardar registro</button>
+          <button type="button" class="btn btn--ghost" id="btn-cancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ================= LISTADO ================= -->
+    <section class="panel panel--list" aria-labelledby="list-title">
+      <div class="panel__header">
+        <h2 id="list-title"><span class="panel__index">02</span> Componentes registrados</h2>
+        <span class="badge" id="contador">0 registros</span>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="f-buscar" placeholder="Buscar por código, nombre o marca…">
+        <select id="f-filtro-categoria">
+          <option value="">Todas las categorías</option>
+          <option>Arduino</option>
+          <option>Sensores</option>
+          <option>Computadoras</option>
+          <option>Monitores</option>
+          <option>Periféricos</option>
+          <option>Componentes electrónicos</option>
+          <option>Herramientas</option>
+          <option>Redes</option>
+          <option>Otros</option>
+        </select>
+        <select id="f-filtro-estado">
+          <option value="">Todos los estados</option>
+          <option>Disponible</option>
+          <option>En uso</option>
+          <option>Reparación</option>
+          <option>Baja</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Marca</th>
+              <th>Cant.</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body">
+            <tr><td colspan="7" class="tabla-vacia">Cargando datos…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= MODAL CONFIRMACIÓN ================= -->
+  <div class="modal" id="modal-confirmar" hidden>
+    <div class="modal__card">
+      <h3>¿Eliminar este registro?</h3>
+      <p id="modal-texto">Esta acción no se puede deshacer.</p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" id="modal-cancelar">Cancelar</button>
+        <button class="btn btn--danger" id="modal-confirmar-btn">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zona de mensajes (éxito / error) -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
